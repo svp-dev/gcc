@@ -1,0 +1,1 @@
+../sparc/sol2-cn.asm
