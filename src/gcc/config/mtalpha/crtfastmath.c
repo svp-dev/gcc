@@ -1,0 +1,1 @@
+../alpha/crtfastmath.c
