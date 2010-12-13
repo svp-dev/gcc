@@ -3676,7 +3676,7 @@ esac
 # ??? Once 2.11 is released, probably need to add first known working
 # version to the per-target configury.
 case "$target" in
-  i?86*-*-* | mips*-*-* | alpha*-*-* | mtalpha*-*-* | powerpc*-*-* | sparc*-*-* | m68*-*-* \
+  i?86*-*-* | mips*-*-* | alpha*-*-* | mtalpha*-*-* | powerpc*-*-* | sparc*-*-* | mtsparc*-*-* | m68*-*-* \
   | x86_64*-*-* | hppa*-*-* | arm*-*-* \
   | xstormy16*-*-* | cris-*-* | crisv32-*-* | xtensa*-*-* | bfin-*-* | score*-*-* \
   | spu-*-* | fido*-*-* | m32c-*-*)
@@ -4136,6 +4136,7 @@ case "$target" in
   powerpc*-*-linux* | \
   powerpc*-*-gnu* | \
   sparc*-*-linux* | \
+  mtsparc*-*-linux* | \
   s390*-*-linux* | \
   alpha*-*-linux* | \
   mtalpha*-*-linux*)

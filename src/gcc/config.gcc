@@ -363,6 +363,10 @@ sparc*-*-*)
 	cpu_type=sparc
 	need_64bit_hwint=yes
 	;;
+mtsparc*-*-*)
+	cpu_type=mtsparc
+	need_64bit_hwint=yes
+	;;
 spu*-*-*)
 	cpu_type=spu
 	need_64bit_hwint=yes
@@ -2575,6 +2579,121 @@ sparc64-*-netbsd*)
 	extra_options="${extra_options} sparc/long-double-switch.opt"
 	tmake_file="${tmake_file} sparc/t-netbsd64"
 	;;
+mtsparc-*-netbsdelf*)
+	tm_file="${tm_file} dbxelf.h elfos.h svr4.h mtsparc/sysv4.h netbsd.h netbsd-elf.h mtsparc/netbsd-elf.h"
+	extra_options="${extra_options} mtsparc/long-double-switch.opt"
+	;;
+mtsparc64-*-openbsd*)
+	tm_file="mtsparc/openbsd1-64.h ${tm_file} dbxelf.h elfos.h svr4.h mtsparc/sysv4.h mtsparc/sp64-elf.h"
+	tm_file="${tm_file} openbsd.h openbsd-stdint.h openbsd-libpthread.h mtsparc/openbsd64.h"
+	extra_options="${extra_options} mtsparc/little-endian.opt"
+	gas=yes gnu_ld=yes
+	with_cpu=ultrasparc
+	;;
+mtsparc-*-elf*)
+	tm_file="${tm_file} dbxelf.h elfos.h newlib-stdint.h svr4.h mtsparc/sysv4.h mtsparc/sp-elf.h"
+	tmake_file="mtsparc/t-elf mtsparc/t-crtfm"
+	extra_parts="crti.o crtn.o crtbegin.o crtend.o"
+	;;
+mtsparc-*-linux*)		# MTSPARC's running GNU/Linux, libc6
+	tm_file="${tm_file} dbxelf.h elfos.h svr4.h mtsparc/sysv4.h linux.h glibc-stdint.h"
+	extra_options="${extra_options} mtsparc/long-double-switch.opt"
+	tmake_file="${tmake_file} mtsparc/t-linux"
+	if test x$enable_targets = xall; then
+		tm_file="mtsparc/biarch64.h ${tm_file} mtsparc/linux64.h"
+		tmake_file="${tmake_file} mtsparc/t-linux64"
+	else
+		tm_file="${tm_file} mtsparc/linux.h"
+	fi
+	tmake_file="${tmake_file} mtsparc/t-crtfm"
+	;;
+mtsparc-*-rtems*)
+	tm_file="${tm_file} dbxelf.h elfos.h svr4.h mtsparc/sysv4.h mtsparc/sp-elf.h mtsparc/rtemself.h rtems.h newlib-stdint.h"
+	tmake_file="mtsparc/t-elf mtsparc/t-crtfm t-rtems"
+	extra_parts="crti.o crtn.o crtbegin.o crtend.o"
+	;;
+mtsparc*-*-solaris2*)
+	tm_file="mtsparc/biarch64.h ${tm_file} dbxelf.h elfos.h svr4.h mtsparc/sysv4.h sol2.h"
+	case ${target} in
+	    *-*-solaris2.1[0-9]*)
+		tm_file="${tm_file} sol2-10.h"
+		use_gcc_stdint=wrap
+		;;
+	    *)
+		use_gcc_stdint=provide
+		;;
+	esac
+	tm_file="${tm_file} mtsparc/sol2.h"
+	case ${target} in
+	    mtsparc64-*-* | mtsparcv9-*-*)
+		tm_file="${tm_file} mtsparc/sol2-64.h"
+		;;
+	    *)
+		test x$with_cpu != x || with_cpu=v9
+		;;
+	esac
+	tm_file="${tm_file} mtsparc/sol2-bi.h"
+	if test x$gas = xyes; then
+		tm_file="${tm_file} mtsparc/sol2-gas.h mtsparc/sol2-gas-bi.h"
+	fi
+	if test x$gnu_ld = xyes; then
+		tm_file="${tm_file} sol2-gld.h mtsparc/sol2-gld-bi.h"
+	fi
+	tm_file="${tm_file} tm-dwarf2.h"
+	tmake_file="t-sol2 mtsparc/t-sol2 mtsparc/t-sol2-64 mtsparc/t-crtfm"
+	if test x$gnu_ld = xyes; then
+		tmake_file="$tmake_file t-slibgcc-elf-ver"
+	else
+		tmake_file="$tmake_file t-slibgcc-sld"
+	fi
+	if test x$gas = xyes; then
+		tm_file="usegas.h ${tm_file}"
+	fi
+	c_target_objs="sol2-c.o"
+	cxx_target_objs="sol2-c.o"
+	extra_objs="sol2.o"
+	tm_p_file="${tm_p_file} sol2-protos.h"
+	extra_parts="crt1.o crti.o crtn.o gcrt1.o gmon.o crtbegin.o crtend.o"
+	case ${enable_threads}:${have_pthread_h}:${have_thread_h} in
+	  "":yes:* | yes:yes:* )
+		thread_file=posix
+		;;
+	  "":*:yes | yes:*:yes )
+		thread_file=solaris
+		;;
+	esac
+	;;
+mtsparc-wrs-vxworks)
+	tm_file="${tm_file} elfos.h svr4.h mtsparc/sysv4.h vx-common.h vxworks.h mtsparc/vxworks.h"
+	tmake_file="${tmake_file} mtsparc/t-vxworks"
+	;;
+mtsparc64-*-elf*)
+	tm_file="${tm_file} dbxelf.h elfos.h svr4.h newlib-stdint.h mtsparc/sysv4.h mtsparc/sp64-elf.h"
+	extra_options="${extra_options} mtsparc/little-endian.opt"
+	tmake_file="${tmake_file} mtsparc/t-crtfm"
+	extra_parts="crtbegin.o crtend.o"
+	;;
+mtsparc64-*-freebsd*|ultrasparc-*-freebsd*)
+	tm_file="${tm_file} ${fbsd_tm_file} dbxelf.h elfos.h mtsparc/sysv4.h mtsparc/freebsd.h"
+	extra_options="${extra_options} mtsparc/long-double-switch.opt"
+	tmake_file="${tmake_file} mtsparc/t-crtfm"
+	case "x$with_cpu" in
+		xultrasparc) ;;
+		x) with_cpu=ultrasparc ;;
+		*) echo "$with_cpu not supported for freebsd target"; exit 1 ;;
+	esac
+	;;
+mtsparc64-*-linux*)		# 64-bit SPARC's running GNU/Linux
+	tm_file="mtsparc/biarch64.h ${tm_file} dbxelf.h elfos.h svr4.h mtsparc/sysv4.h linux.h glibc-stdint.h mtsparc/linux64.h"
+	extra_options="${extra_options} mtsparc/long-double-switch.opt"
+	tmake_file="${tmake_file} mtsparc/t-linux mtsparc/t-linux64 mtsparc/t-crtfm"
+	;;
+mtsparc64-*-netbsd*)
+	tm_file="mtsparc/biarch64.h ${tm_file}"
+	tm_file="${tm_file} dbxelf.h elfos.h svr4.h mtsparc/sysv4.h netbsd.h netbsd-elf.h mtsparc/netbsd-elf.h"
+	extra_options="${extra_options} mtsparc/long-double-switch.opt"
+	tmake_file="${tmake_file} mtsparc/t-netbsd64"
+	;;
 spu-*-elf*)
 	tm_file="dbxelf.h elfos.h spu/spu-elf.h spu/spu.h newlib-stdint.h"
 	tmake_file="spu/t-spu-elf"
@@ -2911,7 +3030,8 @@ if test x$with_cpu = x ; then
     mips*-*-vxworks)
       with_arch=mips2
       ;;
-    sparc*-*-*)
+    sparc*-*-* | \
+    mtsparc*-*-*)
       with_cpu="`echo ${target} | sed 's/-.*$//'`"
       ;;
   esac
@@ -3452,6 +3572,36 @@ case "${target}" in
 		esac
 		;;
 
+	mtsparc*-*-*)
+		supported_defaults="cpu float tune"
+
+		for which in cpu tune; do
+			eval "val=\$with_$which"
+			case ${val} in
+			"" | mtsparc | mtsparcv9 | mtsparc64 | mtsparc86x \
+			| v7 | cypress | v8 | mtsupersparc | mtsparclite | f930 \
+			| f934 | hypersparc | mtsparclite86x | sparclet | tsc701 \
+			| v9 | ultrasparc | ultrasparc3 | niagara | niagara2)
+				# OK
+				;;
+			*)
+				echo "Unknown cpu used in --with-$which=$val" 1>&2
+				exit 1
+				;;
+			esac
+		done
+
+		case ${with_float} in
+		"" | soft | hard)
+			# OK
+			;;
+		*)
+			echo "Unknown floating point type used in --with-float=$with_float" 1>&2
+			exit 1
+			;;
+		esac
+		;;
+
 	spu-*-*)
 		supported_defaults="arch tune"
 
@@ -3592,6 +3742,22 @@ case ${target} in
 		# The SPARC port checks this value at compile-time.
 		target_cpu_default2="TARGET_CPU_$with_cpu"
 		;;
+
+	mtsparc*-*-*)
+		# Some standard aliases.
+		case x$with_cpu in
+		xmtsparc)
+			with_cpu=v7
+			;;
+		xmtsparcv9 | xmtsparc64)
+			with_cpu=v9
+			;;
+		esac
+
+		# The MTSPARC port checks this value at compile-time.
+		target_cpu_default2="TARGET_CPU_$with_cpu"
+		;;
+
 	v850*-*-*)
 		# FIXME: The v850 is "special" in that it does not support
 		# runtime CPU selection, only --with-cpu.
