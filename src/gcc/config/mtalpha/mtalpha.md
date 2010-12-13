@@ -6331,57 +6331,15 @@
   if (CONST_INT_P (operands[1])
       && INTVAL (operands[1]) < 32768)
     {
-      if (INTVAL (operands[1]) >= 4096)
-	{
-	  /* We do this the same way as in the prologue and generate explicit
-	     probes.  Then we update the stack by the constant.  */
-
-	  int probed = 4096;
-
-	  emit_insn (gen_probe_stack (GEN_INT (- probed)));
-	  while (probed + 8192 < INTVAL (operands[1]))
-	    emit_insn (gen_probe_stack (GEN_INT (- (probed += 8192))));
-
-	  if (probed + 4096 < INTVAL (operands[1]))
-	    emit_insn (gen_probe_stack (GEN_INT (- INTVAL(operands[1]))));
-	}
-
       operands[1] = GEN_INT (- INTVAL (operands[1]));
       operands[2] = virtual_stack_dynamic_rtx;
     }
   else
     {
-      rtx out_label = 0;
-      rtx loop_label = gen_label_rtx ();
       rtx want = gen_reg_rtx (Pmode);
-      rtx tmp = gen_reg_rtx (Pmode);
-      rtx memref, test;
 
       emit_insn (gen_subdi3 (want, stack_pointer_rtx,
 			     force_reg (Pmode, operands[1])));
-      emit_insn (gen_adddi3 (tmp, stack_pointer_rtx, GEN_INT (-4096)));
-
-      if (!CONST_INT_P (operands[1]))
-	{
-	  out_label = gen_label_rtx ();
-	  test = gen_rtx_GEU (VOIDmode, want, tmp);
-	  emit_jump_insn (gen_cbranchdi4 (test, want, tmp, out_label));
-	}
-
-      emit_label (loop_label);
-      memref = gen_rtx_MEM (DImode, tmp);
-      MEM_VOLATILE_P (memref) = 1;
-      emit_move_insn (memref, const0_rtx);
-      emit_insn (gen_adddi3 (tmp, tmp, GEN_INT(-8192)));
-      test = gen_rtx_GTU (VOIDmode, tmp, want);
-      emit_jump_insn (gen_cbranchdi4 (test, tmp, want, loop_label));
-
-      memref = gen_rtx_MEM (DImode, want);
-      MEM_VOLATILE_P (memref) = 1;
-      emit_move_insn (memref, const0_rtx);
-
-      if (out_label)
-	emit_label (out_label);
 
       emit_move_insn (stack_pointer_rtx, want);
       emit_move_insn (operands[0], virtual_stack_dynamic_rtx);

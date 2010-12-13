@@ -7841,20 +7841,6 @@ alpha_expand_prologue (void)
 
   if (frame_size <= 32768)
     {
-      if (frame_size > 4096)
-	{
-	  int probed;
-
-	  for (probed = 4096; probed < frame_size; probed += 8192)
-	    emit_insn (gen_probe_stack (GEN_INT (TARGET_ABI_UNICOSMK
-						 ? -probed + 64
-						 : -probed)));
-
-	  /* We only have to do this probe if we aren't saving registers.  */
-	  if (sa_size == 0 && frame_size > probed - 4096)
-	    emit_insn (gen_probe_stack (GEN_INT (-frame_size)));
-	}
-
       if (frame_size != 0)
 	FRP (emit_insn (gen_adddi3 (stack_pointer_rtx, stack_pointer_rtx,
 				    GEN_INT (TARGET_ABI_UNICOSMK
@@ -7863,68 +7849,16 @@ alpha_expand_prologue (void)
     }
   else
     {
-      /* Here we generate code to set R22 to SP + 4096 and set R23 to the
-	 number of 8192 byte blocks to probe.  We then probe each block
-	 in the loop and then set SP to the proper location.  If the
-	 amount remaining is > 4096, we have to do one more probe if we
-	 are not saving any registers.  */
-
-      HOST_WIDE_INT blocks = (frame_size + 4096) / 8192;
-      HOST_WIDE_INT leftover = frame_size + 4096 - blocks * 8192;
-      rtx ptr = gen_rtx_REG (DImode, 22);
-      rtx count = gen_rtx_REG (DImode, 23);
-      rtx seq;
-
-      emit_move_insn (count, GEN_INT (blocks));
-      emit_insn (gen_adddi3 (ptr, stack_pointer_rtx,
-			     GEN_INT (TARGET_ABI_UNICOSMK ? 4096 - 64 : 4096)));
-
-      /* Because of the difficulty in emitting a new basic block this
-	 late in the compilation, generate the loop as a single insn.  */
-      emit_insn (gen_prologue_stack_probe_loop (count, ptr));
-
-      if (leftover > 4096 && sa_size == 0)
-	{
-	  rtx last = gen_rtx_MEM (DImode, plus_constant (ptr, -leftover));
-	  MEM_VOLATILE_P (last) = 1;
-	  emit_move_insn (last, const0_rtx);
-	}
-
-      if (TARGET_ABI_WINDOWS_NT)
-	{
-	  /* For NT stack unwind (done by 'reverse execution'), it's
-	     not OK to take the result of a loop, even though the value
-	     is already in ptr, so we reload it via a single operation
-	     and subtract it to sp.
-
-	     Yes, that's correct -- we have to reload the whole constant
-	     into a temporary via ldah+lda then subtract from sp.  */
-
+      rtx ptr = gen_rtx_REG (DImode, 0);
+      
 	  HOST_WIDE_INT lo, hi;
 	  lo = ((frame_size & 0xffff) ^ 0x8000) - 0x8000;
 	  hi = frame_size - lo;
 
 	  emit_move_insn (ptr, GEN_INT (hi));
 	  emit_insn (gen_adddi3 (ptr, ptr, GEN_INT (lo)));
-	  seq = emit_insn (gen_subdi3 (stack_pointer_rtx, stack_pointer_rtx,
+	  emit_insn (gen_subdi3 (stack_pointer_rtx, stack_pointer_rtx,
 				       ptr));
-	}
-      else
-	{
-	  seq = emit_insn (gen_adddi3 (stack_pointer_rtx, ptr,
-				       GEN_INT (-leftover)));
-	}
-
-      /* This alternative is special, because the DWARF code cannot
-         possibly intuit through the loop above.  So we invent this
-         note it looks at instead.  */
-      RTX_FRAME_RELATED_P (seq) = 1;
-      add_reg_note (seq, REG_FRAME_RELATED_EXPR,
-		    gen_rtx_SET (VOIDmode, stack_pointer_rtx,
-				 gen_rtx_PLUS (Pmode, stack_pointer_rtx,
-					       GEN_INT (TARGET_ABI_UNICOSMK
-							? -frame_size + 64
-							: -frame_size))));
     }
 
   if (!TARGET_ABI_UNICOSMK)
@@ -7943,7 +7877,7 @@ alpha_expand_prologue (void)
 	  else
 	    sa_bias = reg_offset, reg_offset = 0;
 
-	  sa_reg = gen_rtx_REG (DImode, 24);
+	  sa_reg = gen_rtx_REG (DImode, 0);
 	  sa_bias_rtx = GEN_INT (sa_bias);
 
 	  if (add_operand (sa_bias_rtx, DImode))
@@ -8403,7 +8337,7 @@ alpha_expand_epilogue (void)
 	  else
 	    bias = reg_offset, reg_offset = 0;
 
-	  sa_reg = gen_rtx_REG (DImode, 22);
+	  sa_reg = gen_rtx_REG (DImode, 28);
 	  sa_reg_exp = plus_constant (stack_pointer_rtx, bias);
 
 	  emit_move_insn (sa_reg, sa_reg_exp);
@@ -8493,7 +8427,7 @@ alpha_expand_epilogue (void)
 
       if (eh_ofs)
 	{
-	  sp_adj1 = gen_rtx_REG (DImode, 23);
+	  sp_adj1 = gen_rtx_REG (DImode, 28);
 	  emit_move_insn (sp_adj1,
 			  gen_rtx_PLUS (Pmode, stack_pointer_rtx, eh_ofs));
 	}
@@ -8506,7 +8440,7 @@ alpha_expand_epilogue (void)
 	sp_adj2 = GEN_INT (frame_size);
       else if (TARGET_ABI_UNICOSMK)
 	{
-	  sp_adj1 = gen_rtx_REG (DImode, 23);
+	  sp_adj1 = gen_rtx_REG (DImode, 28);
 	  emit_move_insn (sp_adj1, hard_frame_pointer_rtx);
 	  sp_adj2 = const0_rtx;
 	}
@@ -8519,14 +8453,14 @@ alpha_expand_epilogue (void)
 	    sp_adj1 = sa_reg;
 	  else
 	    {
-	      sp_adj1 = gen_rtx_REG (DImode, 23);
+	      sp_adj1 = gen_rtx_REG (DImode, 28);
 	      emit_move_insn (sp_adj1, sp_adj2);
 	    }
 	  sp_adj2 = GEN_INT (low);
 	}
       else
 	{
-	  rtx tmp = gen_rtx_REG (DImode, 23);
+	  rtx tmp = gen_rtx_REG (DImode, 28);
 	  sp_adj2 = alpha_emit_set_const (tmp, DImode, frame_size, 3, false);
 	  if (!sp_adj2)
 	    {
