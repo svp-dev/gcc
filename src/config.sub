@@ -281,6 +281,8 @@ case $basic_machine in
 	| mn10200 | mn10300 \
 	| moxie \
 	| mt \
+	| mtalpha | mtalphaev[4-8] | mtalphaev56 | mtalphaev6[78] | mtalphapca5[67] \
+	| mtalpha64 | mtalpha64ev[4-8] | mtalpha64ev56 | mtalpha64ev6[78] | mtalpha64pca5[67] \
 	| msp430 \
 	| nios | nios2 \
 	| ns16k | ns32k \
@@ -294,6 +296,8 @@ case $basic_machine in
 	| sh64 | sh64le \
 	| sparc | sparc64 | sparc64b | sparc64v | sparc86x | sparclet | sparclite \
 	| sparcv8 | sparcv9 | sparcv9b | sparcv9v \
+	| mtsparc | mtsparc64 | mtsparc64b | mtsparc64v | mtsparc86x | mtsparclet | mtsparclite \
+	| mtsparcv8 | mtsparcv9 | mtsparcv9b | mtsparcv9v \
 	| spu | strongarm \
 	| tahoe | thumb | tic4x | tic54x | tic55x | tic6x | tic80 | tron \
 	| ubicom32 \
@@ -376,6 +380,9 @@ case $basic_machine in
 	| mipstx39-* | mipstx39el-* \
 	| mmix-* \
 	| mt-* \
+	| mtalpha-* | mtalphaev[4-8]-* | mtalphaev56-* | mtalphaev6[78]-* \
+	| mtalpha64-* | mtalpha64ev[4-8]-* | mtalpha64ev56-* | mtalpha64ev6[78]-* \
+	| mtalphapca5[67]-* | mtalpha64pca5[67]-* \
 	| msp430-* \
 	| nios-* | nios2-* \
 	| none-* | np1-* | ns16k-* | ns32k-* \
@@ -389,6 +396,9 @@ case $basic_machine in
 	| sparc-* | sparc64-* | sparc64b-* | sparc64v-* | sparc86x-* | sparclet-* \
 	| sparclite-* \
 	| sparcv8-* | sparcv9-* | sparcv9b-* | sparcv9v-* | strongarm-* | sv1-* | sx?-* \
+	| mtsparc-* | mtsparc64-* | mtsparc64b-* | mtsparc64v-* | mtsparc86x-* | mtsparclet-* \
+	| mtsparclite-* \
+	| mtsparcv8-* | mtsparcv9-* | mtsparcv9b-* | mtsparcv9v-* \
 	| tahoe-* | thumb-* \
 	| tic30-* | tic4x-* | tic54x-* | tic55x-* | tic6x-* | tic80-* \
 	| tile-* | tilegx-* \
@@ -1225,6 +1235,9 @@ case $basic_machine in
 	sparc | sparcv8 | sparcv9 | sparcv9b | sparcv9v)
 		basic_machine=sparc-sun
 		;;
+	mtsparc | mtsparcv8 | mtsparcv9 | mtsparcv9b | mtsparcv9v)
+		basic_machine=mtsparc-sun
+		;;
 	cydra)
 		basic_machine=cydra-cydrome
 		;;
@@ -1539,7 +1552,7 @@ case $basic_machine in
 	*-tti)	# must be before sparc entry or we get the wrong os.
 		os=-sysv3
 		;;
-	sparc-* | *-sun)
+	sparc-* | mtsparc-* | *-sun)
 		os=-sunos4.1.1
 		;;
 	*-be)
