@@ -522,7 +522,7 @@ extern enum alpha_fp_trap_mode alpha_fptm;
    class that represents their union.  */
 
 enum reg_class {
-  NO_REGS, R0_REG, R24_REG, R25_REG, R27_REG,
+  NO_REGS, R0_REG, R27_REG,
   GENERAL_REGS, FLOAT_REGS, ALL_REGS,
   LIM_REG_CLASSES
 };
@@ -532,7 +532,7 @@ enum reg_class {
 /* Give names of register classes as strings for dump file.  */
 
 #define REG_CLASS_NAMES					\
- {"NO_REGS", "R0_REG", "R24_REG", "R25_REG", "R27_REG",	\
+ {"NO_REGS", "R0_REG", "R27_REG",	\
   "GENERAL_REGS", "FLOAT_REGS", "ALL_REGS" }
 
 /* Define which registers fit in which classes.
@@ -542,8 +542,6 @@ enum reg_class {
 #define REG_CLASS_CONTENTS				\
 { {0x00000000, 0x00000000},	/* NO_REGS */		\
   {0x00000001, 0x00000000},	/* R0_REG */		\
-  {0x01000000, 0x00000000},	/* R24_REG */		\
-  {0x02000000, 0x00000000},	/* R25_REG */		\
   {0x08000000, 0x00000000},	/* R27_REG */		\
   {0xffffffff, 0x80000000},	/* GENERAL_REGS */	\
   {0x00000000, 0x7fffffff},	/* FLOAT_REGS */	\
@@ -569,8 +567,6 @@ enum reg_class {
 
 #define REGNO_REG_CLASS(REGNO)			\
  ((REGNO) == 0 ? R0_REG				\
-  : (REGNO) == 24 ? R24_REG			\
-  : (REGNO) == 25 ? R25_REG			\
   : (REGNO) == 27 ? R27_REG			\
   : IN_RANGE ((REGNO), 32, 62) ? FLOAT_REGS	\
   : GENERAL_REGS)
