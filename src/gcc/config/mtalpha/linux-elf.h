@@ -21,7 +21,7 @@ along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
 #undef TARGET_VERSION
-#define TARGET_VERSION fprintf (stderr, " (Alpha GNU/Linux for ELF)");
+#define TARGET_VERSION fprintf (stderr, " (MTAlpha GNU/Linux for ELF)");
 
 #undef EXTRA_SPECS
 #define EXTRA_SPECS \
@@ -39,7 +39,7 @@ along with GCC; see the file COPYING3.  If not see
 
 #define ELF_DYNAMIC_LINKER	LINUX_DYNAMIC_LINKER
 
-#define LINK_SPEC "-m elf64alpha %{G*} %{relax:-relax}		\
+#define LINK_SPEC "-m elf64mtalpha %{G*} %{relax:-relax}		\
   %{O*:-O3} %{!O*:-O1}						\
   %{shared:-shared}						\
   %{!shared:							\

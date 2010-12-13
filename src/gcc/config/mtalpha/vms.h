@@ -38,6 +38,7 @@ along with GCC; see the file COPYING3.  If not see
 	builtin_define_std ("vms");		\
 	builtin_define_std ("VMS");		\
 	builtin_define ("__ALPHA");		\
+	builtin_define ("__MTALPHA");		\
 	builtin_assert ("system=vms");		\
 	if (TARGET_FLOAT_VAX)			\
 	  builtin_define ("__G_FLOAT");		\
@@ -51,7 +52,7 @@ along with GCC; see the file COPYING3.  If not see
 #define TARGET_ABI_OPEN_VMS 1
 
 #undef TARGET_NAME   
-#define TARGET_NAME "OpenVMS/Alpha"
+#define TARGET_NAME "OpenVMS/MTAlpha"
 #undef TARGET_VERSION
 #define TARGET_VERSION fprintf (stderr, " (%s)", TARGET_NAME);           
 
@@ -250,7 +251,7 @@ typedef struct {int num_args; enum avms_arg_type atypes[6];} avms_arg_info;
    file. This avoids having to recompile the world instead of libgcc only
    when changes to this macro are exercised.  */
 
-#define MD_UNWIND_SUPPORT "config/alpha/vms-unwind.h"
+#define MD_UNWIND_SUPPORT "config/mtalpha/vms-unwind.h"
 #endif
 
 #define ASM_OUTPUT_EXTERNAL(FILE, DECL, NAME) \

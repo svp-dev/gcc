@@ -1,1 +1,1 @@
-SHLIB_MAPFILES += $(srcdir)/config/alpha/libgcc-alpha-ldbl.ver
+SHLIB_MAPFILES += $(srcdir)/config/mtalpha/libgcc-mtalpha-ldbl.ver

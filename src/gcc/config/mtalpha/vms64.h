@@ -24,6 +24,7 @@ along with GCC; see the file COPYING3.  If not see
         builtin_define_std ("vms");             \
         builtin_define_std ("VMS");             \
         builtin_define ("__ALPHA");             \
+        builtin_define ("__MTALPHA");             \
         builtin_assert ("system=vms");          \
         builtin_define ("__IEEE_FLOAT");        \
         builtin_define ("__LONG_POINTERS=1");   \

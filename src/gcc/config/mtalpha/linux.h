@@ -81,14 +81,14 @@ along with GCC; see the file COPYING3.  If not see
 #define USE_LD_AS_NEEDED 1
 #endif
 
-#define MD_UNWIND_SUPPORT "config/alpha/linux-unwind.h"
+#define MD_UNWIND_SUPPORT "config/mtalpha/linux-unwind.h"
 
 /* Define if long doubles should be mangled as 'g'.  */
 #define TARGET_ALTERNATE_LONG_DOUBLE_MANGLING
 
 /* -mcpu=native handling only makes sense with compiler running on
    an Alpha chip.  */
-#if defined(__alpha__) || defined(__alpha)
+#if defined(__mtalpha__) || defined(__mtalpha)
 extern const char *host_detect_local_cpu (int argc, const char **argv);
 # define EXTRA_SPEC_FUNCTIONS						\
   { "local_cpu_detect", host_detect_local_cpu },

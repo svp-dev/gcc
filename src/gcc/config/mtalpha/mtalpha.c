@@ -11158,4 +11158,4 @@ alpha_init_libfuncs (void)
 struct gcc_target targetm = TARGET_INITIALIZER;
 
 
-#include "gt-alpha.h"
+#include "gt-mtalpha.h"

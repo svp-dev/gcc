@@ -26,8 +26,9 @@ along with GCC; see the file COPYING3.  If not see
     {							\
 	builtin_define ("__alpha");			\
 	builtin_define ("__alpha__");			\
-	builtin_assert ("cpu=alpha");			\
-	builtin_assert ("machine=alpha");		\
+	builtin_define ("__mtalpha__");			\
+	builtin_assert ("cpu=mtalpha");			\
+	builtin_assert ("machine=mtalpha");		\
 	if (TARGET_CIX)					\
 	  {						\
 	    builtin_define ("__alpha_cix__");		\
