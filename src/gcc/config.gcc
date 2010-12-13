@@ -211,6 +211,8 @@ md_file=
 case ${target} in
    alpha*-dec-osf4*			\
  | alpha*-dec-osf5.0*			\
+ | mtalpha*-dec-osf4*			\
+ | mtalpha*-dec-osf5.0*			\
  | mips-sgi-irix5*			\
  | mips-sgi-irix6.[0-4]*		\
  | *-*-solaris2.7*			\
@@ -263,6 +265,10 @@ m32c*-*-*)
         ;;
 alpha*-*-*)
 	cpu_type=alpha
+	need_64bit_hwint=yes
+	;;
+mtalpha*-*-*)
+	cpu_type=mtalpha
 	need_64bit_hwint=yes
 	;;
 am33_2.0-*-linux*)
@@ -700,6 +706,86 @@ alpha*-dec-*vms*)
 	tm_file="${tm_file} alpha/vms.h"
 	xm_file="alpha/xm-vms.h"
 	tmake_file="alpha/t-alpha vms/t-vms alpha/t-vms alpha/t-ieee"
+	xmake_file=vms/x-vms
+	exeext=.exe
+	install_headers_dir=install-headers-cp
+	extra_options="${extra_options} vms/vms.opt"
+	;;
+mtalpha*-*-linux*)
+	tm_file="${tm_file} mtalpha/elf.h mtalpha/linux.h mtalpha/linux-elf.h glibc-stdint.h"
+	target_cpu_default="MASK_GAS"
+	tmake_file="${tmake_file} mtalpha/t-crtfm mtalpha/t-mtalpha mtalpha/t-ieee mtalpha/t-linux"
+	;;
+mtalpha*-*-gnu*)
+	tm_file="$tm_file mtalpha/elf.h mtalpha/linux.h mtalpha/linux-elf.h gnu.h glibc-stdint.h mtalpha/gnu.h"
+	target_cpu_default="MASK_GAS"
+	tmake_file="${tmake_file} mtalpha/t-crtfm mtalpha/t-mtalpha mtalpha/t-ieee"
+	;;
+mtalpha*-*-freebsd*)
+	tm_file="${tm_file} ${fbsd_tm_file} mtalpha/elf.h mtalpha/freebsd.h"
+	target_cpu_default="MASK_GAS"
+	tmake_file="${tmake_file} mtalpha/t-crtfm mtalpha/t-mtalpha mtalpha/t-ieee"
+	extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o crtbeginT.o"
+	;;
+mtalpha*-*-netbsd*)
+	tm_file="${tm_file} netbsd.h mtalpha/elf.h netbsd-elf.h mtalpha/netbsd.h"
+	target_cpu_default="MASK_GAS"
+	tmake_file="${tmake_file} mtalpha/t-mtalpha mtalpha/t-ieee"
+	;;
+mtalpha*-*-openbsd*)
+	tm_defines="${tm_defines} OBSD_HAS_DECLARE_FUNCTION_NAME OBSD_HAS_DECLARE_FUNCTION_SIZE OBSD_HAS_DECLARE_OBJECT"
+	tm_file="mtalpha/mtalpha.h mtalpha/elf.h openbsd.h openbsd-stdint.h mtalpha/openbsd.h openbsd-libpthread.h"
+	# default x-mtalpha is only appropriate for dec-osf.
+	target_cpu_default="MASK_GAS"
+	tmake_file="${tmake_file} mtalpha/t-mtalpha mtalpha/t-ieee"
+	;;
+mtalpha*-dec-osf[45]*)
+	if test x$stabs = xyes
+	then
+		tm_file="${tm_file} dbx.h"
+	fi
+	if test x$gas != xyes
+	then
+		extra_passes="mips-tfile mips-tdump"
+	fi
+	use_collect2=yes
+	tmake_file="mtalpha/t-mtalpha mtalpha/t-ieee mtalpha/t-crtfm mtalpha/t-osf4"
+	tm_file="${tm_file} mtalpha/osf.h"
+	extra_headers=va_list.h
+	use_gcc_stdint=provide
+	case ${target} in
+	  *-*-osf4*)
+	    # Define TARGET_SUPPORT_ARCH except on 4.0a.
+	    case ${target} in
+		*-*-osf4.0a) ;;
+		*) tm_defines="${tm_defines} TARGET_SUPPORT_ARCH=1"
+	    esac
+	    ;;
+	  *-*-osf5*)
+	    tm_file="${tm_file} mtalpha/osf5.h"
+	    tm_defines="${tm_defines} TARGET_SUPPORT_ARCH=1"
+	    ;;
+	esac
+	case ${enable_threads} in
+	  "" | yes | posix)
+	    thread_file='posix'
+	    tmake_file="${tmake_file} mtalpha/t-osf-pthread"
+	    ;;
+	esac
+	;;
+mtalpha64-dec-*vms*)
+	tm_file="${tm_file} mtalpha/vms.h mtalpha/vms64.h"
+	xm_file="mtalpha/xm-vms.h vms/xm-vms64.h"
+	tmake_file="mtalpha/t-mtalpha vms/t-vms vms/t-vms64 mtalpha/t-vms mtalpha/t-ieee"
+	xmake_file=vms/x-vms
+	exeext=.exe
+	install_headers_dir=install-headers-cp
+	extra_options="${extra_options} vms/vms.opt"
+	;;
+mtalpha*-dec-*vms*)
+	tm_file="${tm_file} mtalpha/vms.h"
+	xm_file="mtalpha/xm-vms.h"
+	tmake_file="mtalpha/t-mtalpha vms/t-vms mtalpha/t-vms mtalpha/t-ieee"
 	xmake_file=vms/x-vms
 	exeext=.exe
 	install_headers_dir=install-headers-cp
@@ -2786,19 +2872,24 @@ if test x$with_cpu = x ; then
     i[34567]86-*-*|x86_64-*-*)
       with_cpu=$cpu
       ;;
-    alphaev6[78]*-*-*)
+    alphaev6[78]*-*-* | \
+    mtalphaev6[78]*-*-*)
       with_cpu=ev67
       ;;
-    alphaev6*-*-*)
+    alphaev6*-*-* | \
+    mtalphaev6*-*-*)
       with_cpu=ev6
       ;;
-    alphapca56*-*-*)
+    alphapca56*-*-* | \
+    mtalphapca56*-*-*)
       with_cpu=pca56
       ;;
-    alphaev56*-*-*)
+    alphaev56*-*-* | \
+    mtalphaev56*-*-*)
       with_cpu=ev56
       ;;
-    alphaev5*-*-*)
+    alphaev5*-*-* | \
+    mtalphaev5*-*-*)
       with_cpu=ev5
       ;;
     frv-*-*linux* | frv400-*-*linux*)
@@ -2943,7 +3034,8 @@ fi
 
 supported_defaults=
 case "${target}" in
-	alpha*-*-*)
+	alpha*-*-* | \
+	mtalpha*-*-*)
 		supported_defaults="cpu tune"
 		for which in cpu tune; do
 			eval "val=\$with_$which"
@@ -3394,7 +3486,8 @@ esac
 # Set some miscellaneous flags for particular targets.
 target_cpu_default2=
 case ${target} in
-	alpha*-*-*)
+	alpha*-*-* | \
+	mtalpha*-*-*)
 		if test x$gas = xyes
 		then
 			target_cpu_default2="MASK_GAS"

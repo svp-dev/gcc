@@ -2585,7 +2585,8 @@ tls_first_minor=
 tls_as_opt=
 case "$target" in
 changequote(,)dnl
-  alpha*-*-*)
+  alpha*-*-* | \
+  mtalpha*-*-*)
     conftest_s='
 	.section ".tdata","awT",@progbits
 foo:	.long	25
@@ -3040,7 +3041,8 @@ fi
 
 case "$target" in
   # All TARGET_ABI_OSF targets.
-  alpha*-*-osf* | alpha*-*-linux* | alpha*-*-*bsd*)
+  alpha*-*-osf* | alpha*-*-linux* | alpha*-*-*bsd* | \
+  mtalpha*-*-osf* | mtalpha*-*-linux* | mtalpha*-*-*bsd*)
     gcc_GAS_CHECK_FEATURE([explicit relocation support],
 	gcc_cv_as_alpha_explicit_relocs, [2,12,0],,
 [	.set nomacro
@@ -3674,7 +3676,7 @@ esac
 # ??? Once 2.11 is released, probably need to add first known working
 # version to the per-target configury.
 case "$target" in
-  i?86*-*-* | mips*-*-* | alpha*-*-* | powerpc*-*-* | sparc*-*-* | m68*-*-* \
+  i?86*-*-* | mips*-*-* | alpha*-*-* | mtalpha*-*-* | powerpc*-*-* | sparc*-*-* | m68*-*-* \
   | x86_64*-*-* | hppa*-*-* | arm*-*-* \
   | xstormy16*-*-* | cris-*-* | crisv32-*-* | xtensa*-*-* | bfin-*-* | score*-*-* \
   | spu-*-* | fido*-*-* | m32c-*-*)
@@ -4135,7 +4137,8 @@ case "$target" in
   powerpc*-*-gnu* | \
   sparc*-*-linux* | \
   s390*-*-linux* | \
-  alpha*-*-linux*)
+  alpha*-*-linux* | \
+  mtalpha*-*-linux*)
     AC_ARG_WITH(long-double-128,
 [  --with-long-double-128  Use 128-bit long double by default.],
       gcc_cv_target_ldbl128="$with_long_double_128",
