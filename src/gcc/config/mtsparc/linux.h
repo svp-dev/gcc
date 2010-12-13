@@ -49,7 +49,7 @@ along with GCC; see the file COPYING3.  If not see
 "
 
 #undef TARGET_VERSION
-#define TARGET_VERSION fprintf (stderr, " (sparc GNU/Linux with ELF)");
+#define TARGET_VERSION fprintf (stderr, " (mtsparc GNU/Linux with ELF)");
 
 #undef SIZE_TYPE
 #define SIZE_TYPE "unsigned int"
@@ -161,7 +161,7 @@ do {									\
 #undef CTORS_SECTION_ASM_OP
 #undef DTORS_SECTION_ASM_OP
 
-#define MD_UNWIND_SUPPORT "config/sparc/linux-unwind.h"
+#define MD_UNWIND_SUPPORT "config/mtsparc/linux-unwind.h"
 
 /* Linux currently uses RMO in uniprocessor mode, which is equivalent to
    TMO, and TMO in multiprocessor mode.  But they reserve the right to

@@ -9228,4 +9228,4 @@ sparc_can_eliminate (const int from ATTRIBUTE_UNUSED, const int to)
           || !targetm.frame_pointer_required ());
 }
 
-#include "gt-sparc.h"
+#include "gt-mtsparc.h"

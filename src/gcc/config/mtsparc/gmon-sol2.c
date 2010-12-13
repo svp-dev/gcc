@@ -39,7 +39,7 @@
 #include "tm.h"
 
 #if 0
-#include "sparc/gmon.h"
+#include "mtsparc/gmon.h"
 #else
 struct phdr {
   char *lpc;

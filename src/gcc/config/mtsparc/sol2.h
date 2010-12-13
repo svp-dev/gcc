@@ -188,4 +188,4 @@ along with GCC; see the file COPYING3.  If not see
 #define PUSHSECTION_FORMAT	"\t.pushsection\t\"%s\"\n"
 #endif
 
-#define MD_UNWIND_SUPPORT "config/sparc/sol2-unwind.h"
+#define MD_UNWIND_SUPPORT "config/mtsparc/sol2-unwind.h"

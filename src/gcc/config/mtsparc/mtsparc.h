@@ -112,15 +112,16 @@ extern const struct processor_costs *sparc_costs;
   do						\
     {						\
 	builtin_define_std ("sparc");		\
+	builtin_define_std ("mtsparc");		\
 	if (TARGET_64BIT)			\
 	  { 					\
-	    builtin_assert ("cpu=sparc64");	\
-	    builtin_assert ("machine=sparc64");	\
+	    builtin_assert ("cpu=mtsparc64");	\
+	    builtin_assert ("machine=mtsparc64");	\
 	  }					\
 	else					\
 	  { 					\
-	    builtin_assert ("cpu=sparc");	\
-	    builtin_assert ("machine=sparc");	\
+	    builtin_assert ("cpu=mtsparc");	\
+	    builtin_assert ("machine=mtsparc");	\
 	  }					\
     }						\
   while (0)

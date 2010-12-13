@@ -17,7 +17,7 @@
 # along with GCC; see the file COPYING3.  If not see
 # <http://www.gnu.org/licenses/>.
 
-LIB1ASMSRC = sparc/lb1spc.asm
+LIB1ASMSRC = mtsparc/lb1spc.asm
 LIB1ASMFUNCS = _mulsi3 _divsi3 _modsi3
 
 # We want fine grained libraries, so use the new code to build the
@@ -42,7 +42,7 @@ LIBGCC = stmp-multilib
 INSTALL_LIBGCC = install-multilib
 
 # Assemble startup files.
-$(T)crti.o: $(srcdir)/config/sparc/sol2-ci.asm $(GCC_PASSES)
-	$(GCC_FOR_TARGET) -c -o $(T)crti.o -x assembler-with-cpp $(srcdir)/config/sparc/sol2-ci.asm
-$(T)crtn.o: $(srcdir)/config/sparc/sol2-cn.asm $(GCC_PASSES)
-	$(GCC_FOR_TARGET) -c -o $(T)crtn.o -x assembler-with-cpp $(srcdir)/config/sparc/sol2-cn.asm
+$(T)crti.o: $(srcdir)/config/mtsparc/sol2-ci.asm $(GCC_PASSES)
+	$(GCC_FOR_TARGET) -c -o $(T)crti.o -x assembler-with-cpp $(srcdir)/config/mtsparc/sol2-ci.asm
+$(T)crtn.o: $(srcdir)/config/mtsparc/sol2-cn.asm $(GCC_PASSES)
+	$(GCC_FOR_TARGET) -c -o $(T)crtn.o -x assembler-with-cpp $(srcdir)/config/mtsparc/sol2-cn.asm
