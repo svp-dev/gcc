@@ -498,6 +498,7 @@ case "${target}" in
     case "${target}" in
       i*86-*-*) ;;
       alpha*-*-*) ;;
+      mtalpha*-*-*) ;;
       x86_64-*-*) ;;
       *)
 	noconfigdirs="$noconfigdirs ${libgcj}"
@@ -827,6 +828,23 @@ case "${target}" in
     ;;
   mt-*-*)
     noconfigdirs="$noconfigdirs sim"
+    ;;
+  mtalpha*-dec-osf*)
+    # ld works, but does not support shared libraries.
+    # newlib is not 64 bit ready.  I'm not sure about fileutils.
+    # gas doesn't generate exception information.
+    noconfigdirs="$noconfigdirs gas ld fileutils target-newlib target-libgloss"
+    ;;
+  mtalpha*-*-*vms*)
+    noconfigdirs="$noconfigdirs gdb ld target-newlib target-libgloss ${libgcj}"
+    ;;
+  mtalpha*-*-linux*)
+    # newlib is not 64 bit ready
+    noconfigdirs="$noconfigdirs target-newlib target-libgloss"
+    ;;
+  mtalpha*-*-*)
+    # newlib is not 64 bit ready
+    noconfigdirs="$noconfigdirs target-newlib target-libgloss ${libgcj}"
     ;;
   powerpc-*-aix*)
     # copied from rs6000-*-* entry
@@ -2380,6 +2398,9 @@ case "${target}" in
     ;;
 
   mn10300-*-* | \
+  mtalpha*-*-*vms*)
+    md_exec_prefix=/gnu/lib/gcc-lib
+    ;;
   powerpc-*-chorusos* | \
   powerpc*-*-eabi* | \
   powerpc*-*-sysv* | \
@@ -2452,11 +2473,17 @@ case "${target}" in
 esac
 
 alphaieee_frag=/dev/null
+mtalphaieee_frag=/dev/null
 case $target in
   alpha*-*-*)
     # This just makes sure to use the -mieee option to build target libs.
     # This should probably be set individually by each library.
     alphaieee_frag="config/mt-alphaieee"
+    ;;
+  mtalpha*-*-*)
+    # This just makes sure to use the -mieee option to build target libs.
+    # This should probably be set individually by each library.
+    mtalphaieee_frag="config/mt-mtalphaieee"
     ;;
 esac
 
@@ -2486,7 +2513,7 @@ if test x${with_stabs} = x ; then
   case "${target}" in
   mips*-*-irix[[56]]*)
     ;;
-  mips*-*-* | alpha*-*-osf*)
+  mips*-*-* | alpha*-*-osf* | mtalpha*-*-osf*)
     with_stabs=yes;
     extra_host_args="${extra_host_args} --with-stabs"
     ;;
@@ -3117,7 +3144,7 @@ case "${target}" in
 esac
 
 # Makefile fragments.
-for frag in host_makefile_frag target_makefile_frag alphaieee_frag ospace_frag;
+for frag in host_makefile_frag target_makefile_frag alphaieee_frag mtalphaieee_frag ospace_frag;
 do
   eval fragval=\$$frag
   if test $fragval != /dev/null; then
@@ -3127,6 +3154,7 @@ done
 AC_SUBST_FILE(host_makefile_frag)
 AC_SUBST_FILE(target_makefile_frag)
 AC_SUBST_FILE(alphaieee_frag)
+AC_SUBST_FILE(mtalphaieee_frag)
 AC_SUBST_FILE(ospace_frag)
 
 # Miscellanea: directories, flags, etc.
