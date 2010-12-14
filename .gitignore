@@ -1,0 +1,4 @@
+src/configure
+src/gcc/configure
+build-*
+*\~
