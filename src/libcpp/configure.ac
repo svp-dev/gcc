@@ -139,6 +139,7 @@ fi
 m4_changequote(,)
 case $target in
 	alpha*-*-* | \
+        mtalpha*-*-* | \
 	arm*-*-*eabi* | \
 	arm*-*-symbianelf* | \
 	x86_64-*-* | \
@@ -153,6 +154,7 @@ case $target in
 	rs6000*-*-* | \
 	s390*-*-* | \
 	sparc*-*-* | \
+        mtsparc*-*-* | \
 	spu-*-* | \
 	sh[123456789lbe]*-*-* | sh-*-*)
 		need_64bit_hwint=yes ;;

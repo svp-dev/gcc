@@ -1,6 +1,6 @@
 #! /bin/bash
 set -ex
 AUTOCONF=${AUTOCONF:-autoconf}
-for i in gcc .; do
+for i in libcpp gcc .; do
    (cd $i && $AUTOCONF)
 done
