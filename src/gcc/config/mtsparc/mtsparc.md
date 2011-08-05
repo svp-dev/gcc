@@ -3980,7 +3980,7 @@
 {
   return TARGET_SPARCLET
          ? "smuld\t%1, %2, %L0"
-         : "smul\t%1, %2, %L0\n\trd\t%%y, %H0";
+         : "smul\t%1, %2, %L0\n\tmov\t%L0, %L0\n\trd\t%%y, %H0";
 }
   [(set (attr "type")
 	(if_then_else (eq_attr "isa" "sparclet")
@@ -4008,7 +4008,7 @@
 {
   return TARGET_SPARCLET
          ? "smuld\t%1, %2, %L0"
-         : "smul\t%1, %2, %L0\n\trd\t%%y, %H0";
+         : "smul\t%1, %2, %L0\n\tmov\t%L0, %L0\n\trd\t%%y, %H0";
 }
   [(set (attr "type")
 	(if_then_else (eq_attr "isa" "sparclet")
@@ -4110,7 +4110,7 @@
 			       (sign_extend:DI (match_operand:SI 2 "register_operand" "r")))
 		      (const_int 32))))]
   "TARGET_HARD_MUL32"
-  "smul\t%1, %2, %%g0\n\trd\t%%y, %0"
+  "smul\t%1, %2, %0\n\tmov\t%0, %0\n\trd\t%%y, %0"
   [(set_attr "type" "multi")
    (set_attr "length" "2")])
 
@@ -4122,7 +4122,7 @@
 			       (match_operand:DI 2 "small_int_operand" "i"))
 		      (const_int 32))))]
   "TARGET_HARD_MUL32"
-  "smul\t%1, %2, %%g0\n\trd\t%%y, %0"
+  "smul\t%1, %2, %0\n\tmov\t%0, %0\n\trd\t%%y, %0"
   [(set_attr "type" "multi")
    (set_attr "length" "2")])
 
@@ -4174,7 +4174,7 @@
 {
   return TARGET_SPARCLET
          ? "umuld\t%1, %2, %L0"
-         : "umul\t%1, %2, %L0\n\trd\t%%y, %H0";
+         : "umul\t%1, %2, %L0\n\tmov\t%L0, %L0\n\trd\t%%y, %H0";
 }
   [(set (attr "type")
         (if_then_else (eq_attr "isa" "sparclet")
@@ -4202,7 +4202,7 @@
 {
   return TARGET_SPARCLET
          ? "umuld\t%1, %s2, %L0"
-         : "umul\t%1, %s2, %L0\n\trd\t%%y, %H0";
+         : "umul\t%1, %s2, %L0\n\tmov\t%L0, %L0\n\trd\t%%y, %H0";
 }
   [(set (attr "type")
 	(if_then_else (eq_attr "isa" "sparclet")
@@ -4299,7 +4299,7 @@
 			       (zero_extend:DI (match_operand:SI 2 "register_operand" "r")))
 		      (const_int 32))))]
   "TARGET_HARD_MUL32"
-  "umul\t%1, %2, %%g0\n\trd\t%%y, %0"
+  "umul\t%1, %2, %0\n\tmov\t%0, %0\n\trd\t%%y, %0"
   [(set_attr "type" "multi")
    (set_attr "length" "2")])
 
@@ -4311,7 +4311,7 @@
 			       (match_operand:DI 2 "uns_small_int_operand" ""))
 		      (const_int 32))))]
   "TARGET_HARD_MUL32"
-  "umul\t%1, %s2, %%g0\n\trd\t%%y, %0"
+  "umul\t%1, %s2, %0\n\tmov\t%0, %0\n\trd\t%%y, %0"
   [(set_attr "type" "multi")
    (set_attr "length" "2")])
 
