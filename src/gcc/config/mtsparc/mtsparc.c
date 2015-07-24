@@ -4062,7 +4062,7 @@ emit_save_or_restore_regs (int action)
 	 because if %g1 can hold a function result, then
 	 sparc_expand_epilogue will lose (the result will be
 	 clobbered).  */
-      base = gen_rtx_REG (Pmode, 1);
+      base = gen_rtx_REG (Pmode, 2); /* MT: ensure %g1 is not clobbered, it may contain the thread index */
       emit_move_insn (base, GEN_INT (offset));
       emit_insn (gen_rtx_SET (VOIDmode,
 			      base,
@@ -4181,7 +4181,7 @@ sparc_expand_prologue (void)
 	}
       else
 	{
-	  rtx reg = gen_rtx_REG (Pmode, 1);
+	  rtx reg = gen_rtx_REG (Pmode, 2); /* avoid clobber %g1 */
 	  emit_move_insn (reg, GEN_INT (-actual_fsize));
 	  insn = emit_insn (gen_stack_pointer_inc (reg));
 	  add_reg_note (insn, REG_FRAME_RELATED_EXPR,
@@ -4202,7 +4202,7 @@ sparc_expand_prologue (void)
 	}
       else
 	{
-	  rtx reg = gen_rtx_REG (Pmode, 1);
+	  rtx reg = gen_rtx_REG (Pmode, 2); /* avoid clobber %g1 */
 	  emit_move_insn (reg, GEN_INT (-actual_fsize));
 	  insn = emit_insn (gen_save_register_window (reg));
 	}
