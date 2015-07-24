@@ -1127,8 +1127,8 @@ extern enum reg_class sparc_regno_reg_class[FIRST_PSEUDO_REGISTER];
    reloaded.  */
 
 #define REG_ALLOC_ORDER \
-{ 1, 2, 3, 4, 5, 6, 7,			/* %g1-%g7 */	\
-  13, 12, 11, 10, 9, 8, 		/* %o5-%o0 */	\
+{ 2, 1, 3, 4, 5, 6, 7,			/* %g1-%g7 */	\
+  13, 12, 11, 10, 9, 8,                 /* %o5-%o0 */	\
   15,					/* %o7 */	\
   16, 17, 18, 19, 20, 21, 22, 23,	/* %l0-%l7 */ 	\
   29, 28, 27, 26, 25, 24, 31,		/* %i5-%i0,%i7 */\
@@ -1166,7 +1166,7 @@ extern enum reg_class sparc_regno_reg_class[FIRST_PSEUDO_REGISTER];
    window is not critical like it is when we do have function calls.  */
 
 #define REG_LEAF_ALLOC_ORDER \
-{ 1, 2, 3, 4, 5, 6, 7, 			/* %g1-%g7 */	\
+{ 2, 1, 3, 4, 5, 6, 7,                      /* %g1-%g7 */	\
   29, 28, 27, 26, 25, 24,		/* %i5-%i0 */	\
   15,					/* %o7 */	\
   13, 12, 11, 10, 9, 8,			/* %o5-%o0 */	\
