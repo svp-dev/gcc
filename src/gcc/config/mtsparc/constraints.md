@@ -96,9 +96,9 @@
       (match_test "ival == 4096")))
 
 (define_constraint "P"
- "Signed 9-bit integer constant"
+ "Unsigned 9-bit integer constant"
  (and (match_code "const_int")
-      (match_test "SPARC_SIMM9_P (ival)")))
+      (match_test "SPARC_IMM9_P (ival)")))
 
 ;; Extra constraints
 ;; Our memory extra constraints have to emulate the behavior of 'm' and 'o',

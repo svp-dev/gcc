@@ -1197,11 +1197,12 @@ extern char leaf_reg_remap[];
 /* Local macro to handle the two v9 classes of FP regs.  */
 #define FP_REG_CLASS_P(CLASS) ((CLASS) == FP_REGS || (CLASS) == EXTRA_FP_REGS)
 
-/* Predicates for 9-bit, 10-bit, 11-bit and 13-bit signed constants.  */
-#define SPARC_SIMM9_P(X) ((unsigned HOST_WIDE_INT) (X) + 0x100 < 0x200)
+/* Predicates for 10-bit, 11-bit and 13-bit signed constants.  */
 #define SPARC_SIMM10_P(X) ((unsigned HOST_WIDE_INT) (X) + 0x200 < 0x400)
 #define SPARC_SIMM11_P(X) ((unsigned HOST_WIDE_INT) (X) + 0x400 < 0x800)
 #define SPARC_SIMM13_P(X) ((unsigned HOST_WIDE_INT) (X) + 0x1000 < 0x2000)
+/* Predicate for 9-bit unsigned constants.  */
+#define SPARC_IMM9_P(X) ((unsigned HOST_WIDE_INT) (X) < 0x200)
 
 /* 10- and 11-bit immediates are only used for a few specific insns.
    SMALL_INT is used throughout the port so we continue to use it.  */
